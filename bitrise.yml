@@ -29,6 +29,7 @@ workflows:
           run_if: true
           inputs:
             - pbxproj_path: "project.pbxproj"
+            - info_plist_file: "Info.plist"
             - bundle_version: "1"
             - bundle_version_short: "1.0.0"
 

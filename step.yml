@@ -65,6 +65,13 @@ inputs:
       description: |
         Path to the iOS .pbxproj file.
       is_required: true
+  - info_plist_file:
+    opts:
+      title: "Info.plist file path"
+      summary: ""
+      description: |
+        Path to the given iOS project's Info.plist file.
+      is_required: true
   - bundle_version:
     opts:
       title: "Bundle Version to set"
@@ -79,12 +86,10 @@ inputs:
       description: |
         MARKETING_VERSION e.g.: 1.0.0
       is_required: true
-# outputs:
-#   - EXAMPLE_STEP_OUTPUT:
-#     opts:
-#       title: "Example Step Output"
-#       summary: Summary. No more than 2-3 sentences.
-#       description: |
-#         Description of this output.
-
-#         Can be Markdown formatted text.
+outputs:
+  - APP_VERSION:
+    opts:
+      title: Version (CFBundleShortVersionString from Info.plist)
+  - APP_BUILD:
+    opts:
+      title: Build (CFBundleVersion from Info.plist)
