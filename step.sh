@@ -33,26 +33,24 @@ echo " (i) Setting the bundle version to ${bundle_version} ..."
 sed -i '' -e 's/CURRENT_PROJECT_VERSION \= [^\;]*\;/CURRENT_PROJECT_VERSION = '$bundle_version';/' $pbxproj_path
 
 
-
+# Check if plist file path is provided
 if [ -n "${info_plist_file}" ]; then
   if [ ! -f "${info_plist_file}" ] ; then
-    echo " [!] File Info.plist doesn't exist at specified path: ${info_plist_file}"
-    echo " [!] Exiting..."
-    exit 1
+    echo " [!] Warning: Info.plist file does not exist at path: ${info_plist_file}. Skipping plist modifications."
+  else
+    echo " (i) Updating Info.plist at: ${info_plist_file} ..."
+
+    /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${bundle_version}" "${info_plist_file}"
+    /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${bundle_version_short}" "${info_plist_file}"
+
+    REPLACED_BUNDLE_VERSION="$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "${info_plist_file}")"
+    echo " (i) Replaced Bundle Version: $REPLACED_BUNDLE_VERSION"
+    REPLACED_BUNDLE_SHORT_VERSION="$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "${info_plist_file}")"
+    echo " (i) Replaced Bundle Short Version String: $REPLACED_BUNDLE_SHORT_VERSION"
+
+    envman add --key APP_BUILD --value "${REPLACED_BUNDLE_VERSION}"
+    envman add --key APP_VERSION --value "${REPLACED_BUNDLE_SHORT_VERSION}"
   fi
-
-  echo " (i) Updating Info.plist at: ${info_plist_file} ..."
-
-  /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${bundle_version}" "${info_plist_file}"
-  /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${bundle_version_short}" "${info_plist_file}"
-
-  REPLACED_BUNDLE_VERSION="$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "${info_plist_file}")"
-  echo " (i) Replaced Bundle Version: $REPLACED_BUNDLE_VERSION"
-  REPLACED_BUNDLE_SHORT_VERSION="$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "${info_plist_file}")"
-  echo " (i) Replaced Bundle Short Version String: $REPLACED_BUNDLE_SHORT_VERSION"
-
-  envman add --key APP_BUILD --value "${REPLACED_BUNDLE_VERSION}"
-  envman add --key APP_VERSION --value "${REPLACED_BUNDLE_SHORT_VERSION}"
 else
   echo " (i) No Info.plist provided, skipping plist actions."
 fi
