@@ -71,7 +71,7 @@ inputs:
       summary: ""
       description: |
         Path to the given iOS project's Info.plist file.
-      is_required: true
+      is_required: false
   - bundle_version:
     opts:
       title: "Bundle Version to set"
